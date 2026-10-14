@@ -6,6 +6,9 @@
 //
 // Values are rendered as-is. This is a TEST FIXTURE — never put a real secret
 // in an app running this image.
+//
+// It writes one stdout line at startup and one per request (never /healthz,
+// never a value), so a platform's runtime-log view has something to show.
 const http = require('http');
 
 // Docker/orchestrator noise that says nothing about what the user set.
@@ -15,12 +18,16 @@ const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+const port = process.env.PORT || 3000;
+
 http
   .createServer((req, res) => {
     if (req.url === '/healthz') {
       res.writeHead(200, { 'Content-Type': 'text/plain' });
       return res.end('ok');
     }
+
+    console.log('fixture request ' + req.method + ' ' + req.url);
 
     const rows = Object.entries(process.env)
       .filter(([k]) => !HIDE.has(k))
@@ -48,4 +55,6 @@ http
 <code>${esc(new Date().toISOString())}</code>. Test fixture — not for real secrets.</p>
 <table>${rows}</table>`);
   })
-  .listen(process.env.PORT || 3000);
+  .listen(port, () => {
+    console.log('pivocloud dev fixture listening on port ' + port);
+  });
