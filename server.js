@@ -9,6 +9,10 @@
 //
 // It writes one stdout line at startup and one per request (never /healthz,
 // never a value), so a platform's runtime-log view has something to show.
+//
+// A SIGUSR2 sent from inside the container makes it write one line and exit 1, so
+// the restart policy restarts it exactly as after a real crash. Nothing an
+// outside request sends can trigger it.
 const http = require('http');
 
 // Docker/orchestrator noise that says nothing about what the user set.
@@ -58,3 +62,8 @@ http
   .listen(port, () => {
     console.log('pivocloud dev fixture listening on port ' + port);
   });
+
+process.on('SIGUSR2', () => {
+  console.log('fixture crash requested by SIGUSR2, exiting 1');
+  process.exit(1);
+});
