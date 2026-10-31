@@ -1,0 +1,6 @@
+{
+  "name": "railpack-sample-node",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Phase 318 sample: no dependency, no start script; the Procfile starts it"
+}
