@@ -1,0 +1,7 @@
+{
+  "name": "pivocloud/runtime-scan-railpack-php",
+  "description": "Fixture for the weekly security report (phase 118): no Dockerfile, so Railpack builds it. PHP is pinned to a version with known critical advisories.",
+  "require": {
+    "php": "8.2.34"
+  }
+}
