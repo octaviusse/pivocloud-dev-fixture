@@ -1,11 +1,5 @@
-# Deliberately classic Dockerfile syntax — no BuildKit-only features.
-#
-# PivoCloud's worker builds with the legacy Docker builder (it passes
-# DOCKER_BUILDKIT as a build ARG, which does nothing; see the PivoCloud
-# broken-windows ledger, window #6). Any `RUN --mount=...` here would fail to
-# deploy. Keep this file boring on purpose: its whole job is to always build.
-FROM node:20-alpine
-WORKDIR /app
-COPY server.js .
-EXPOSE 3000
-CMD ["node", "server.js"]
+FROM nginx:alpine
+RUN echo tok1ac58cb01 >/dev/null
+RUN printf 'server {\n  listen 8080;\n  location / { return 200 "tok1ac58cb01"; }\n}\n' > /etc/nginx/conf.d/default.conf
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
